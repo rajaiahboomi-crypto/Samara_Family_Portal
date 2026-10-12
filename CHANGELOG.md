@@ -1,3 +1,8 @@
+## 1.0.36 — Centre code (MOG) compulsory in the Guest ID
+
+- The centre code must be typed (MOG for Mogappair), so future centres stay distinct. Typing only the numbers (e.g. 202610008) now shows "Please start the Guest ID with the centre code, e.g. MOG." — the portal no longer assumes MOG.
+- Small letters, spaces and missing dashes are still fine (mog202610008, MOG 2026 10 8). Remembered Guest ID and the personal link work as in 1.0.35. No SQL.
+
 ## 1.0.35 — Easy Guest ID: remembered on the phone, filled from a link, typed any way
 
 - After the first successful login, the portal **remembers the Guest ID on that phone** (never the PIN). Next time the Guest ID is already filled and the cursor waits in the PIN box — the family types only the PIN. "Change Guest ID" clears it (e.g. a shared phone).

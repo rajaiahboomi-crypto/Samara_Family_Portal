@@ -844,6 +844,7 @@ document.querySelector('#first-login-form')?.addEventListener('submit',async eve
 
 // 1.0.35: easy Guest ID — remembered on this phone after a successful login (never the PIN),
 // pre-filled from a personal link (…/?id=MOG-2026-10-008), and typed any way (mog202610008, MOG 2026 10 8).
+// 1.0.36: the centre code (MOG …) is compulsory — it tells our centres apart; it is never assumed.
 const FAMILY_GUEST_ID_KEY='samara_family_guest_id';
 function familyGuestIdCandidates(raw){
   const typed=String(raw||'').trim().toUpperCase();
@@ -851,7 +852,8 @@ function familyGuestIdCandidates(raw){
   const m=compact.match(/^([A-Z]*)(\d{4})(\d{2})(\d{1,6})$/);
   const list=[];
   if(m){
-    const prefix=m[1]||'MOG',serial=m[4],plain=String(Number(serial));
+    if(!m[1])return [];
+    const prefix=m[1],serial=m[4],plain=String(Number(serial));
     [serial,plain.padStart(3,'0'),plain.padStart(4,'0')].forEach(x=>list.push(`${prefix}-${m[2]}-${m[3]}-${x}`));
   }
   if(typed)list.push(typed);
@@ -875,7 +877,7 @@ fillFamilyGuestId();
 document.querySelector('#login-form')?.addEventListener('submit',async event=>{
   event.preventDefault();const form=new FormData(event.currentTarget);const status=document.querySelector('#login-status');const submit=event.currentTarget.querySelector('button[type="submit"]');
   const typedId=String(form.get('patient_id')||'').trim();const idCandidates=familyGuestIdCandidates(typedId);const pin=String(form.get('pin')||'').trim();
-  if(!typedId){status.textContent='Please enter the Guest ID.';return;}if(!/^\d{6}$/.test(pin)){status.textContent='Please enter the 6-digit Access PIN.';return;}if(!supabaseClient){status.textContent='Family Portal connection is unavailable. Please contact Samara.';return;}
+  if(!typedId){status.textContent='Please enter the Guest ID.';return;}if(!/^[A-Za-z]/.test(typedId.replace(/[^A-Za-z0-9]/g,''))){status.textContent='Please start the Guest ID with the centre code, e.g. MOG.';return;}if(!/^\d{6}$/.test(pin)){status.textContent='Please enter the 6-digit Access PIN.';return;}if(!supabaseClient){status.textContent='Family Portal connection is unavailable. Please contact Samara.';return;}
   submit.disabled=true;status.textContent='Checking secure family access…';
   try{
     // 1.0.35: try the Guest ID as typed (normalised), then with the serial padded to 3 / 4 digits; stop at the first match.

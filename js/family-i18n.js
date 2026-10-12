@@ -5,6 +5,8 @@
   'use strict';
   var STORE='samara_family_portal_language';
   var DICT={
+"Please start the Guest ID with the centre code, e.g. MOG.": "Guest ID-ஐ சென்டர் குறியீட்டுடன் (உதா: MOG) தொடங்கவும்.",
+"Type it with the centre code — small letters, spaces or no dashes are fine (e.g. mog202610008).": "சென்டர் குறியீட்டுடன் டைப் செய்யவும் — சிறிய எழுத்து, இடைவெளி அல்லது கோடு இல்லாமல் பரவாயில்லை (உதா: mog202610008).",
 "Enter the Guest ID and your 6-digit Access PIN. This phone remembers the Guest ID after the first login — next time only the PIN is needed.": "கெஸ்ட் (Guest) ID மற்றும் உங்கள் 6 இலக்க Access PIN-ஐ உள்ளிடவும். முதல் உள்நுழைவுக்குப் பிறகு இந்த ஃபோன் Guest ID-ஐ நினைவில் வைக்கும் — அடுத்த முறை PIN மட்டும் போதும்.",
 "Guest ID": "கெஸ்ட் (Guest) ID",
 "Example: MOG-2026-10-008": "உதாரணம்: MOG-2026-10-008",
