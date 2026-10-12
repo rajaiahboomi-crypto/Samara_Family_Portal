@@ -1,3 +1,10 @@
+## 1.0.35 — Easy Guest ID: remembered on the phone, filled from a link, typed any way
+
+- After the first successful login, the portal **remembers the Guest ID on that phone** (never the PIN). Next time the Guest ID is already filled and the cursor waits in the PIN box — the family types only the PIN. "Change Guest ID" clears it (e.g. a shared phone).
+- **Personal link** from the ERP WhatsApp text (ERP 2.16.18): https://family.samaraassistedliving.com/?id=MOG-2026-10-008 fills the Guest ID automatically; the ID is then removed from the address bar.
+- The Guest ID can be **typed any way**: small letters, spaces, without dashes (mog202610008, MOG 2026 10 8, or only 202610008 for Mogappair). The portal tries the matching forms and signs in with the right one.
+- Login wording: "Patient ID" → "Guest ID"; example MOG-2026-10-008. Tamil words added. No SQL.
+
 ## 1.0.34 — Fluid intake / output in simple words
 
 - Activity timeline (Food & Diet) shows one line per day for Guests on the nurses' Intake / Output chart: "Fluid intake X ml, output Y ml" (7 AM to 7 AM; "so far today" for the current day).

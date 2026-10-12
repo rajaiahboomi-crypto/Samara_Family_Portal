@@ -5,6 +5,15 @@
   'use strict';
   var STORE='samara_family_portal_language';
   var DICT={
+"Enter the Guest ID and your 6-digit Access PIN. This phone remembers the Guest ID after the first login — next time only the PIN is needed.": "கெஸ்ட் (Guest) ID மற்றும் உங்கள் 6 இலக்க Access PIN-ஐ உள்ளிடவும். முதல் உள்நுழைவுக்குப் பிறகு இந்த ஃபோன் Guest ID-ஐ நினைவில் வைக்கும் — அடுத்த முறை PIN மட்டும் போதும்.",
+"Guest ID": "கெஸ்ட் (Guest) ID",
+"Example: MOG-2026-10-008": "உதாரணம்: MOG-2026-10-008",
+"Type it any way — small letters, spaces or no dashes are fine (e.g. mog202610008).": "எப்படி வேண்டுமானாலும் டைப் செய்யலாம் — சிறிய எழுத்து, இடைவெளி அல்லது கோடு இல்லாமல் (உதா: mog202610008).",
+"✓ Guest ID saved on this phone · ": "✓ Guest ID இந்த ஃபோனில் சேமிக்கப்பட்டுள்ளது · ",
+"✓ Guest ID filled from your Samara link · ": "✓ சமரா லிங்கிலிருந்து Guest ID நிரப்பப்பட்டது · ",
+"Change Guest ID": "Guest ID-ஐ மாற்று",
+"Please enter the Guest ID.": "Guest ID-ஐ உள்ளிடவும்.",
+"Guest ID or Access PIN is incorrect, or Family Portal access is disabled.": "Guest ID அல்லது Access PIN தவறானது, அல்லது குடும்ப போர்டல் அணுகல் முடக்கப்பட்டுள்ளது.",
 "View-only family report generated from the resident's Family Portal-visible ERP records.": "குடியிருப்பாளரின் குடும்ப போர்டலில் காணக்கூடிய ERP பதிவுகளிலிருந்து உருவான, பார்வைக்கு மட்டுமான குடும்ப அறிக்கை.",
 "Invitation to the inauguration of Samara Assisted Living on 27 August 2026, Mogappair, Chennai": "27 ஆகஸ்ட் 2026 அன்று சென்னை முகப்பேரில் நடைபெறும் சமரா அசிஸ்டெட் லிவிங் திறப்பு விழா அழைப்பிதழ்",
 "Samara inauguration invitation could not be displayed.": "சமரா திறப்பு விழா அழைப்பிதழைக் காட்ட முடியவில்லை.",

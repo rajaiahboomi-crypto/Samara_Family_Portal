@@ -777,7 +777,7 @@ function showFirstLoginChange(){
   const welcome=document.querySelector('#first-login-welcome');if(welcome)welcome.textContent=`Welcome ${familySession.relative_name||'Family Member'}. Please replace the temporary PIN with your own private 6-digit PIN.`;
   document.querySelector('#first-login-form')?.querySelector('input[name="new_pin"]')?.focus();
 }
-function closePortal(){portalScreen.classList.add('hidden');firstLoginScreen?.classList.add('hidden');loginScreen.classList.remove('hidden');sessionStorage.removeItem('samara_family_session');familySession=null;clearInterval(refreshTimer);refreshTimer=null;}
+function closePortal(){portalScreen.classList.add('hidden');firstLoginScreen?.classList.add('hidden');loginScreen.classList.remove('hidden');sessionStorage.removeItem('samara_family_session');familySession=null;clearInterval(refreshTimer);refreshTimer=null;try{fillFamilyGuestId()}catch(_){}}
 async function firstLoginRequired(){
   if(!familySession?.session_token||!familySession?.access_id||!supabaseClient)return false;
   try{
@@ -842,13 +842,48 @@ document.querySelector('#first-login-form')?.addEventListener('submit',async eve
   }catch(error){console.error(error);status.textContent=error.message||'Unable to save the new PIN. Please try again.';}finally{button.disabled=false;}
 });
 
+// 1.0.35: easy Guest ID — remembered on this phone after a successful login (never the PIN),
+// pre-filled from a personal link (…/?id=MOG-2026-10-008), and typed any way (mog202610008, MOG 2026 10 8).
+const FAMILY_GUEST_ID_KEY='samara_family_guest_id';
+function familyGuestIdCandidates(raw){
+  const typed=String(raw||'').trim().toUpperCase();
+  const compact=typed.replace(/[^A-Z0-9]/g,'');
+  const m=compact.match(/^([A-Z]*)(\d{4})(\d{2})(\d{1,6})$/);
+  const list=[];
+  if(m){
+    const prefix=m[1]||'MOG',serial=m[4],plain=String(Number(serial));
+    [serial,plain.padStart(3,'0'),plain.padStart(4,'0')].forEach(x=>list.push(`${prefix}-${m[2]}-${m[3]}-${x}`));
+  }
+  if(typed)list.push(typed);
+  return [...new Set(list)].slice(0,4);
+}
+function savedFamilyGuestId(){try{return localStorage.getItem(FAMILY_GUEST_ID_KEY)||''}catch(_){return ''}}
+function rememberFamilyGuestId(id){if(adminPreviewMode||!id)return;try{localStorage.setItem(FAMILY_GUEST_ID_KEY,String(id).toUpperCase())}catch(_){}}
+function fillFamilyGuestId(){
+  const input=document.querySelector('#login-form input[name="patient_id"]');if(!input)return;
+  let fromLink='';try{const q=new URLSearchParams(window.location.search);fromLink=(q.get('id')||q.get('guest')||'').trim();
+    if(fromLink){q.delete('id');q.delete('guest');const rest=q.toString();history.replaceState(null,'',window.location.pathname+(rest?'?'+rest:'')+window.location.hash);}}catch(_){}
+  const value=(fromLink||savedFamilyGuestId()||'').toUpperCase();
+  const savedNote=document.querySelector('#guest-id-saved'),hint=document.querySelector('#guest-id-hint');
+  if(value){input.value=value;savedNote?.classList.remove('hidden');hint?.classList.add('hidden');
+    if(fromLink)savedNote&&(savedNote.firstChild.textContent='✓ Guest ID filled from your Samara link · ');
+    setTimeout(()=>{const pin=document.querySelector('#login-form input[name="pin"]');if(pin&&!loginScreen.classList.contains('hidden'))pin.focus();},150);}
+  else{savedNote?.classList.add('hidden');hint?.classList.remove('hidden');}
+}
+document.querySelector('#change-guest-id')?.addEventListener('click',()=>{try{localStorage.removeItem(FAMILY_GUEST_ID_KEY)}catch(_){}const input=document.querySelector('#login-form input[name="patient_id"]');if(input){input.value='';input.focus();}document.querySelector('#guest-id-saved')?.classList.add('hidden');document.querySelector('#guest-id-hint')?.classList.remove('hidden');});
+fillFamilyGuestId();
 document.querySelector('#login-form')?.addEventListener('submit',async event=>{
   event.preventDefault();const form=new FormData(event.currentTarget);const status=document.querySelector('#login-status');const submit=event.currentTarget.querySelector('button[type="submit"]');
-  const patientId=String(form.get('patient_id')||'').trim().toUpperCase();const pin=String(form.get('pin')||'').trim();
-  if(!patientId){status.textContent='Please enter the Patient ID.';return;}if(!/^\d{6}$/.test(pin)){status.textContent='Please enter the 6-digit Access PIN.';return;}if(!supabaseClient){status.textContent='Family Portal connection is unavailable. Please contact Samara.';return;}
+  const typedId=String(form.get('patient_id')||'').trim();const idCandidates=familyGuestIdCandidates(typedId);const pin=String(form.get('pin')||'').trim();
+  if(!typedId){status.textContent='Please enter the Guest ID.';return;}if(!/^\d{6}$/.test(pin)){status.textContent='Please enter the 6-digit Access PIN.';return;}if(!supabaseClient){status.textContent='Family Portal connection is unavailable. Please contact Samara.';return;}
   submit.disabled=true;status.textContent='Checking secure family access…';
-  try{const {data,error}=await supabaseClient.rpc('family_portal_login_by_patient',{p_patient_id:patientId,p_pin:pin});if(error)throw error;const row=Array.isArray(data)?data[0]:data;if(!row){status.textContent='Patient ID or Access PIN is incorrect, or Family Portal access is disabled.';return;}
+  try{
+    // 1.0.35: try the Guest ID as typed (normalised), then with the serial padded to 3 / 4 digits; stop at the first match.
+    let row=null,usedId=idCandidates[0];
+    for(const candidate of idCandidates){const {data,error}=await supabaseClient.rpc('family_portal_login_by_patient',{p_patient_id:candidate,p_pin:pin});if(error)throw error;row=Array.isArray(data)?data[0]:data;if(row){usedId=candidate;break;}}
+    if(!row){status.textContent='Guest ID or Access PIN is incorrect, or Family Portal access is disabled.';return;}
     familySession={access_id:row.access_id,patient_uuid:row.patient_uuid,patient_code:row.patient_code,patient_name:row.patient_name,room_no:row.room_no,bed_no:row.bed_no,admission_date:row.admission_date,relative_name:row.relative_name,relationship:row.relationship,session_token:row.session_token,login_pin:pin};
+    rememberFamilyGuestId(row.patient_code||usedId);
     // Audit only a real successful family login. Admin Preview never reaches this path.
     try{await supabaseClient.rpc('record_family_portal_login_event',{p_session_token:familySession.session_token,p_access_id:familySession.access_id,p_user_agent:navigator.userAgent||null});}catch(auditError){console.warn('Family Portal login audit unavailable',auditError);}
     if(await firstLoginRequired()){status.textContent='';showFirstLoginChange();return;}
