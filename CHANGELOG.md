@@ -1,4 +1,4 @@
-## 1.0.36 — Centre code (MOG) compulsory in the Guest ID
+## 1.0.37 — Billing lines show units and unit priceFamily billing now uses approved charge quantities and unit prices when grouping item lines. For example, the first Suction Catheter line displays as “Suction Catheter - 14 Fr (3 × ₹100)” with a ₹300 debit, instead of “× 2” which counts transactions and can be mistaken for units. No database change required.## 1.0.36 — Centre code (MOG) compulsory in the Guest ID
 
 - The centre code must be typed (MOG for Mogappair), so future centres stay distinct. Typing only the numbers (e.g. 202610008) now shows "Please start the Guest ID with the centre code, e.g. MOG." — the portal no longer assumes MOG.
 - Small letters, spaces and missing dashes are still fine (mog202610008, MOG 2026 10 8). Remembered Guest ID and the personal link work as in 1.0.35. No SQL.
