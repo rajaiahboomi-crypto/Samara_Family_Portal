@@ -1,6 +1,6 @@
-## 1.0.37 — Billing lines show units and unit price
+## 1.0.37 — Billing lines show quantity and unit price
 
-Family billing now uses approved charge quantities and unit prices when grouping item lines. For example, the first Suction Catheter line displays as “Suction Catheter - 14 Fr (3 × ₹100)” with a ₹300 debit, instead of “× 2” which counts transactions and can be mistaken for units. No database change required.
+Family billing groups same-item charges using approved quantities and unit prices when available, making each billed amount easier to understand. No database change required.
 
 ## 1.0.36 — Centre code (MOG) compulsory in the Guest ID
 
@@ -46,4 +46,3 @@ An advance recorded as a Payment with category "Advance" is now counted as Advan
 
 - Billing table and Ledger PDF show only the item name (e.g. "Examination Gloves"). Accounts names, "Admin-fixed tariff", approval remarks and internal discount notes are no longer shown to families.
 - Same-day charges for the same item are grouped into one line with the total, e.g. "Examination Gloves × 7 — ₹510".
-- Room rent shows as "Room rent · 06-10-2026 · Room 109-B"; tariff discounts as "Room tariff adjustment · date · Room (₹3,200 → ₹2,500 per day)"; payments as "Advance received · Ref …".
