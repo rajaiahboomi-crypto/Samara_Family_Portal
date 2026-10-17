@@ -763,7 +763,7 @@ async function loadDashboard(showStatus=false){
   try{
     const {data,error}=await supabaseClient.rpc('family_portal_dashboard',{p_session_token:familySession.session_token});
     if(error)throw error; if(!data)throw new Error('Family Portal session expired or access disabled.');
-    const enriched=await withBeverages(await enrichDischargeSummary(data));
+    const base=await enrichDischargeSummary(data);    const withUnits=await withBillUnits(base);    const enriched=await withBeverages(withUnits);
     renderDashboard(enriched); loadDailyMoments(); if(btn&&showStatus)btn.textContent='✓ Updated'; setTimeout(()=>{if(btn)btn.textContent=old||'↻ Refresh';},1200); return true;
   }catch(err){console.error('Family dashboard load failed',err);if(btn)btn.textContent=old||'↻ Refresh';return false;}
 }
