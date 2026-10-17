@@ -1,4 +1,8 @@
-## 1.0.37 — Billing lines show units and unit priceFamily billing now uses approved charge quantities and unit prices when grouping item lines. For example, the first Suction Catheter line displays as “Suction Catheter - 14 Fr (3 × ₹100)” with a ₹300 debit, instead of “× 2” which counts transactions and can be mistaken for units. No database change required.## 1.0.36 — Centre code (MOG) compulsory in the Guest ID
+## 1.0.37 — Billing lines show units and unit price
+
+Family billing now uses approved charge quantities and unit prices when grouping item lines. For example, the first Suction Catheter line displays as “Suction Catheter - 14 Fr (3 × ₹100)” with a ₹300 debit, instead of “× 2” which counts transactions and can be mistaken for units. No database change required.
+
+## 1.0.36 — Centre code (MOG) compulsory in the Guest ID
 
 - The centre code must be typed (MOG for Mogappair), so future centres stay distinct. Typing only the numbers (e.g. 202610008) now shows "Please start the Guest ID with the centre code, e.g. MOG." — the portal no longer assumes MOG.
 - Small letters, spaces and missing dashes are still fine (mog202610008, MOG 2026 10 8). Remembered Guest ID and the personal link work as in 1.0.35. No SQL.
@@ -43,18 +47,3 @@ An advance recorded as a Payment with category "Advance" is now counted as Advan
 - Billing table and Ledger PDF show only the item name (e.g. "Examination Gloves"). Accounts names, "Admin-fixed tariff", approval remarks and internal discount notes are no longer shown to families.
 - Same-day charges for the same item are grouped into one line with the total, e.g. "Examination Gloves × 7 — ₹510".
 - Room rent shows as "Room rent · 06-10-2026 · Room 109-B"; tariff discounts as "Room tariff adjustment · date · Room (₹3,200 → ₹2,500 per day)"; payments as "Advance received · Ref …".
-- Last column renamed Mode: shows Cash / UPI etc. for payments only (no more "Not applicable").
-- All Family Portal dates now DD-MM-YYYY. No SQL.
-
-## 1.0.27 — Colourful Overview dashboard
-
-- Overview cards now use the same colourful style as Billing: Medicines Today (pink), Daily Care (amber), Latest BP (blue), Outstanding (red), each with its own icon. 4 across on desktop, 2 on tablets, 1 on phones.
-- Discounts / Adjustments moved off the Overview; it stays on the Billing page.
-- When the family has paid more than the charges, the card now shows "Advance Balance ₹X · In your favour" in green (Overview and Billing) instead of a red minus amount. Fully settled shows ₹0 "All bills settled" in green.
-- Fixed: Medicines Today and Daily Care now count today only (they were counting every day loaded, e.g. "59 / 9").
-- Tamil wording added for the new labels. No SQL.
-
-## 1.0.26 — Resident tariff dates and adjustment visibility
-
-Show the resident-applicable tariff date from admission or the later tariff date. Preserve original audit entries and balances. Family Portal displays discount credits, refund debits and a separate discount total. No additional SQL migration is required; migration 182 remains the billing prerequisite.
-
